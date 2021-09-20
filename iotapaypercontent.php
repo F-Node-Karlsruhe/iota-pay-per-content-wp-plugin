@@ -16,8 +16,8 @@ function paid_shortcode( $atts, $content = null ) {
 	if ( is_user_logged_in() ) {
 		return $content;
 	}
-	
-	global $post
+
+	global $post;
 
 	$domain = parse_url(get_site_url())['host'];
 
