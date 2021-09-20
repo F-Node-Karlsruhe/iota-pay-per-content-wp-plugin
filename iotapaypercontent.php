@@ -19,7 +19,8 @@ function paid_shortcode( $atts, $content = null ) {
 
 	global $post;
 
-	$domain = parse_url(get_site_url())['host'];
+	$site = get_site_url();
+	$domain = parse_url($site)['host'];
 
 	$slug = $post->post_name;
 
