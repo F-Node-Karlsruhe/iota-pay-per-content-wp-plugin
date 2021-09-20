@@ -10,49 +10,28 @@
  */
 
 
-/*******************************************
-* global variables
-*******************************************/
 
+function paid_shortcode( $atts, $content = null ) {	
 
-if ( ! defined( 'IPPC_PLUGIN_VERSION' ) ) {
-	define( 'IPPC_PLUGIN_VERSION', '0.1' );
-}
-
-if ( ! defined( 'IPPC_PLUGIN_DIR' ) ) {
-	define( 'IPPC_PLUGIN_DIR', dirname(__FILE__) );
-}
-
-if ( ! defined( 'IPPC_PLUGIN_URL' ) ) {
-	define( 'IPPC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-}
-
-
-
-
-/*******************************************
-* file includes
-*******************************************/
-require_once  RC_PLUGIN_DIR . '/includes/misc-functions.php';
-require_once  RC_PLUGIN_DIR . '/includes/forms.php';
-require_once  RC_PLUGIN_DIR . '/includes/scripts.php';
-require_once  RC_PLUGIN_DIR . '/includes/upgrades.php';
-require_once  RC_PLUGIN_DIR . '/includes/integrations.php';
-include(RC_PLUGIN_DIR . '/includes/settings.php');
-include(RC_PLUGIN_DIR . '/includes/shortcodes.php');
-include(RC_PLUGIN_DIR . '/includes/metabox.php');
-include(RC_PLUGIN_DIR . '/includes/display-functions.php');
-include(RC_PLUGIN_DIR . '/includes/feed-functions.php');
-include(RC_PLUGIN_DIR . '/includes/user-checks.php');
-
-/**
- * Deactivates the plugin if Restrict Content Pro is activated.
- *
- * @since 2.2.1
- */
-function rc_deactivate_plugin() {
-	if ( defined( 'IPPC_PLUGIN_VERSION' ) ) {
-		deactivate_plugins( plugin_basename( __FILE__ ) );
+	if ( is_user_logged_in() ) {
+		return $content;
 	}
+
+	$domain = parse_url(get_site_url())['host'];
+
+	$slug = $post->post_name;
+
+	ob_start();
+    ?>
+	<div id="iota-pay-per-content-identifier-b88797071904e355cd79c9b0a965d" style="background: lightgray;
+				border-radius: 10px;
+				padding: 30px;">
+	<h5>This part is for paying readers only</h5>
+	<h5><a href="<?php echo esc_url( 'https://pay-per-content.com/gateway/get/' . $domain . '/' . $slug . '/' ); ?>">Buy the full article</a></h5>
+	<p style="font-size: 8px;">Powered by pay-per-content.com</p>
+	</div>
+	<?php
+    return ob_get_clean();
 }
-add_action( 'admin_init', 'ippc_deactivate_plugin' );
+
+add_shortcode( 'paid', 'paid_shortcode' );
